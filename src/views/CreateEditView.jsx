@@ -7,12 +7,29 @@ export default function CreateEditView(){
   const { id } = useParams()
   const navigate = useNavigate()
   const ctx = useContext(ItemsContext)
-  // TODO: initial if editing; onSave add/update then navigate
+
+  const item = id ? ctx.items.find(i => i.id == id) : null
+  const initial = item || {}
+
+  const handleSave = (data) => {
+    if (id) {
+      ctx.updateItem(parseInt(id), data)
+    } else {
+      ctx.addItem(data)
+    }
+    navigate('/list')
+  }
+
+  const handleCancel = () => navigate(-1)
 
   return (
     <div>
       <h2 className="h5 mb-3">{id ? 'Edit Item' : 'Add Item'}</h2>
-      <ItemForm /* initial={{}} onSave={(data)=>{}} onCancel={()=>navigate(-1)} */ />
+      <ItemForm
+        initial={initial}
+        onSave={handleSave}
+        onCancel={handleCancel}
+      />
     </div>
   )
 }
